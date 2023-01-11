@@ -1,4 +1,4 @@
-const { client } = require('./index');
+const { client, getAllUsers, dropTables} = require('./index');
 
 
 async function testDB() {
@@ -13,4 +13,27 @@ async function testDB() {
     }
   }
   
+  async function testDB() {
+    try {
+      client.connect();
+  
+      const users = await getAllUsers();
+      console.log(users);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      client.end();
+    }
+  }
+  
+  // async function dropTables() {
+  //   try {
+  //     await client.query(`
+  //      DROP TABLE IF EXISTS users;
+  //     `);
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
   testDB();
+ 
