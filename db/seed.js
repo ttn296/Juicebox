@@ -1,11 +1,12 @@
-const { client, getAllUsers, dropTables} = require('./index');
+const { client, getAllUsers } = require('./index');
 
 
 async function testDB() {
     try {
-        client.connect();
         const result = await client.query(`SELECT * FROM users;`);
         console.log(result);
+        const users = await getAllUsers();
+        console.log(users)
     } catch (error) {
       console.error(error);
     } finally {
@@ -13,13 +14,34 @@ async function testDB() {
     }
   }
   
-  async function testDB() {
+  
+  async function dropTables() {
+    try {
+       await client.query(`
+    
+      `);
+    } catch (error) {
+      console.error(error)
+      throw error;
+    }
+  }
+
+  async function createTables() {
+    try {
+      await client.query(`
+  
+      `);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async function rebuildDB() {
     try {
       client.connect();
   
-      const users = await getAllUsers();
-      console.log(users);
-      console.log('hello world')
+      await dropTables();
+      await createTables();
     } catch (error) {
       console.error(error);
     } finally {
@@ -27,14 +49,5 @@ async function testDB() {
     }
   }
   
-  // async function dropTables() {
-  //   try {
-  //     await client.query(`
-  //      DROP TABLE IF EXISTS users;
-  //     `);
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
-  testDB();
+  rebuildDB();
  
