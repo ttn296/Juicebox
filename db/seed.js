@@ -19,6 +19,7 @@ async function testDB() {
   
       const users = await getAllUsers();
       console.log(users);
+      console.log('hello world')
     } catch (error) {
       console.error(error);
     } finally {
