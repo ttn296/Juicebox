@@ -8,7 +8,7 @@ const {
   getAllPosts,
   getPostsByUser, 
   getUserById,
-  addTagsToPost
+  
 } = require('./index');
   
   async function dropTables() {
@@ -47,7 +47,17 @@ const {
         title VARCHAR(255) NOT NULL,
         content TEXT NOT NULL,
         active BOOLEAN DEFAULT true
-      )
+      );
+      `);
+      await client.query(`
+      CREATE TABLE tags(
+        id SERIAL PRIMARY KEY,
+        name,VARCHAR(255) UNIQUE NOT NULL
+      );
+      CREATE TABLE post_tags (
+        "postId" INTEGER REFERENCES posts(id),
+        "tagId" INTEGER REFERENCES tags(id),
+        UNIQUE (post_id, tag_id)
       `);
       console.log("Finished building tables!");
     } catch (error) {
@@ -114,35 +124,6 @@ const {
     }
   }
 
-async function createTags(tagList) {
-  if (tagList.length === 0) {
-    return;
-  }
-
-  const insertValues = tagList.map(
-    (_, index) => `$${index + 1}`).join('),(');
-    
-    
-    const selectValues = tagList.map(
-      (_, index) => `$${index + 1}`).join(',');
-      try {
-        const {rows: [tags]} = await
-        client.query(`
-        INSERT INTO tags(name)
-        VALUES (${insertValues})
-        ON CONFLICT (name) DO NOTHING;`)
-
-        const {rows} = await client.query (`
-        SELECT * FROM tags WHERE name IN (${selectValues});`)
-        return rows;
-        
-      } catch (error) {
-        throw error;
-      }
-    
-}
-
-
 async function createPostTag(postId, tagId) {
   try {
     await client.query(`
@@ -200,8 +181,6 @@ async function getPostById(postId) {
     throw error;
   }
 }
-
-
 
   async function rebuildDB() {
     try {
