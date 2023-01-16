@@ -155,5 +155,6 @@ module.exports = {
     updatePost,
     getAllPosts,
     getPostsByUser,
-    getUserById
+    getUserById,
+    addTagsToPost
   }
